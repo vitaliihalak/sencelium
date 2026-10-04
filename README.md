@@ -1,5 +1,7 @@
 # Sencelium
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23134121.svg)](https://doi.org/10.5281/zenodo.23134121)
+
 Sencelium is an independent research project building a non-Transformer
 language model architecture: gated-delta-rule blocks with a content-blind
 "nucleus" channel, a memory pool that keeps spawning, merging and
