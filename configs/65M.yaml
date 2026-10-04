@@ -1,0 +1,9 @@
+# Sencelium 65M -- overrides on top of Config's defaults (= the 30M scale).
+d_model: 384
+n_blocks: 19
+n_heads: 6
+ffn_hidden: 1536
+mem_max_slots: 250_000
+max_steps: 80_000
+warmup_steps: 2_200
+val_interval: 10_000

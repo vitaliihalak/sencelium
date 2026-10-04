@@ -1,0 +1,10 @@
+# Sencelium 30M -- matches Config's own defaults; kept explicit for clarity
+# and as a template for new scales.
+d_model: 256
+n_blocks: 15
+n_heads: 4
+ffn_hidden: 1024
+mem_max_slots: 100_000
+max_steps: 36_621
+warmup_steps: 1_000
+val_interval: 9_000

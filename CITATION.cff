@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: If you use this software, please cite it using these metadata.
+title: Sencelium
+type: software
+authors:
+  - family-names: Halak
+    given-names: Vitalii
+    orcid: "https://orcid.org/0009-0003-6491-053X"
+url: "https://sencelium.com"
+repository-code: "https://github.com/vitaliihalak/sencelium"
+license: Apache-2.0

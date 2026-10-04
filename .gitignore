@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.eggs/
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Secrets / env
+.env
+*.pem
+*.key
+
+# ML — checkpoints, logs, runs (go to Hugging Face, not git)
+checkpoints/
+logs/
+runs/
+outputs/
+wandb/
+lightning_logs/
+*.ckpt
+*.pt
+*.pth
+*.safetensors
+
+# Data
+data/
+*.cache/
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
