@@ -13,6 +13,49 @@ it isn't one, at these scales. What it does claim, honestly: the memory is
 measurably load-bearing (ablating it hurts, more at 65M than 30M), and
 perplexity scales very differently with context length.
 
+## Key findings
+
+Full methodology and all numbers: [`benchmarks/results.md`](benchmarks/results.md) · [sencelium.com/results](https://sencelium.com/results/).
+
+**Memory structures itself during training, unsupervised.** Starting from
+zero slots, it spawns new ones and merges similar ones into categories as
+training goes — no labels, no fixed taxonomy. Usage stays concentrated in a
+small fraction of slots and near-duplicate content stays low, at both scales.
+
+| | Sencelium 30M | Sencelium 65M |
+|---|---|---|
+| categories formed | 317 | 500 |
+| spawn → merge → reassignments | 5,354 → 1,659 → 8,492 | 5,137 → 778 → 6,850 |
+| slots holding 90% of usage | 76 (2.1%) | 154 (3.5%) |
+| near-dup rate | 0.53% | 1.54% |
+
+**Memory is load-bearing, and more so at scale.** Forcing the pool empty at
+eval time (`no_mem`) costs real perplexity on the same checkpoint, same
+data — and the cost *grows* with model size instead of shrinking.
+
+| | Sencelium 30M | Sencelium 65M |
+|---|---|---|
+| val_ppl / no_mem | 272.46 / 276.68 | 129.39 / 154.36 |
+| mem_delta | 4.22 (1.5%) | 24.97 (19.3%) |
+
+**Carrying state across a document helps, for free.** No retraining, no
+extra parameters — just not resetting recurrent state between a document's
+own windows at eval time.
+
+| | Sencelium 30M | Sencelium 65M |
+|---|---|---|
+| carry_gain | 9.6% | 14.4% |
+
+**The ESN residual and the inner voice loop are both doing real work.**
+`esn_alpha`'s magnitude grows with scale instead of decaying toward zero;
+the voice loop's per-round updates shrink but stay nonzero through the
+third round — iterative refinement, not a no-op pass.
+
+| | Sencelium 30M | Sencelium 65M |
+|---|---|---|
+| esn_alpha | −1.74 | −3.61 |
+| voice-loop deltas (round 1→3) | 0.299 → 0.140 → 0.110 | 0.467 → 0.251 → 0.126 |
+
 ## Results
 
 Full numbers, methodology, and reproduction commands: [`benchmarks/results.md`](benchmarks/results.md).
