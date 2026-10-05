@@ -56,6 +56,17 @@ third round — iterative refinement, not a no-op pass.
 | esn_alpha | −1.74 | −3.61 |
 | voice-loop deltas (round 1→3) | 0.299 → 0.140 → 0.110 | 0.467 → 0.251 → 0.126 |
 
+A fair ablation of the ESN branch at 65M -- replacing its output with the
+dataset mean, or with another document's ESN output, rather than zeroing
+it (zeroing mostly measures distribution shock, not content value) --
+shows a real, measurable content-specific contribution:
+
+| ESN ablation (65M) | val_ppl |
+|---|---|
+| trained (real) | 124.30 |
+| output → dataset-mean | 166.29 |
+| output → another document's ESN output | 194.27 |
+
 ## Results
 
 Full numbers, methodology, and reproduction commands: [`benchmarks/results.md`](benchmarks/results.md).
