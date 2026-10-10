@@ -21,7 +21,10 @@ env/
 
 # ML — checkpoints, logs, runs (go to Hugging Face, not git)
 checkpoints/
-logs/
+logs/*
+!logs/README.md
+!logs/*/
+!logs/*/metrics.csv
 runs/
 outputs/
 wandb/
