@@ -103,9 +103,10 @@ at its trained length, Sencelium is clearly ahead only at 65M and 125M, by a few
 percent at 65M and up to 10% at 125M; and against a Transformer evaluated with a
 sliding window, Sencelium does not win at any length or scale.
 
-Training a step takes about three times as long as the Transformer's on the same GPU
-(1.35 against 4.00 steps per second at 125M, batch of 4, A100 40 GB), even though the
-Transformer runs with gradient checkpointing and Sencelium does not.
+At the training batch of 32, a training step takes 1.4 to 1.9 times as long as the
+Transformer's on the same GPU (2.33 against 3.16 steps per second at 125M, RTX PRO 6000),
+and 2.4 to 3.0 times at a batch of 4, even though the Transformer runs with gradient
+checkpointing and Sencelium does not.
 
 ## Quickstart
 

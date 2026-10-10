@@ -71,18 +71,28 @@ values are 29%, 15% and 10% above 184.11, 88.33 and 57.66).
 
 ## Throughput
 
-`benchmarks/eval.py throughput`: 50 timed training steps after 10 warm-up steps, batch size 4, sequence
-length 512, mean of two repetitions, one A100 40 GB.
+`benchmarks/eval.py throughput`: 50 timed training steps after 10 warm-up steps, sequence length 512,
+bf16 autocast (the precision the models were trained in), mean of two repetitions, one NVIDIA RTX PRO 6000
+(via Modal), at the training batch of 32 and at a batch of 4.
 
-| Model             | 30M  | 65M  | 125M |
-|-------------------|------|------|------|
-| Sencelium, it/s   | 2.17 | 1.67 | 1.35 |
-| Transformer, it/s | 6.38 | 5.92 | 4.00 |
+| Model             | batch | 30M   | 65M  | 125M |
+|-------------------|-------|-------|------|------|
+| Sencelium, it/s   | 32    | 4.38  | 3.37 | 2.33 |
+| Transformer, it/s | 32    | 8.42  | 4.98 | 3.16 |
+| Ratio             | 32    | 1.9   | 1.5  | 1.4  |
+| Sencelium, it/s   | 4     | 4.66  | 3.86 | 3.11 |
+| Transformer, it/s | 4     | 14.04 | 9.45 | 8.43 |
+| Ratio             | 4     | 3.0   | 2.4  | 2.7  |
 
-Forward and backward only, no `torch.compile`. Both Transformer scripts run with gradient
-checkpointing, Sencelium does not, and Sencelium's per-step memory-pool bookkeeping is not included;
-all three cut in the same direction, so the real gap is larger. The architecture is latency-bound (many
-small sequential operations), not compute-bound.
+Repetitions differ by at most 7% at batch 32 and by up to 53% at batch 4 (Transformer 65M: 6.95 and 11.96),
+so the batch-4 ratios cannot rank the scales. Forward and backward only, no `torch.compile`. Both
+Transformer scripts run with gradient checkpointing, Sencelium does not, and Sencelium's per-step
+memory-pool bookkeeping is not included; both favour Sencelium, so the real gap is larger. The Transformer
+gains much more than Sencelium from the smaller batch, consistent with an architecture that is
+latency-bound (many small sequential operations) rather than compute-bound.
+
+> An earlier version of this table ran the benchmark in fp32 on an A100 at batch 4 (ratios 2.9, 3.6, 3.0),
+> although both models train in bf16; that overstated the gap because the Transformer gains more from bf16.
 
 ## What the memory and the other components do
 

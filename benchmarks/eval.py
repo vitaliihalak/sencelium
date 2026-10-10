@@ -142,6 +142,11 @@ def cmd_ppl(args) -> None:
         print(f"{k}: {v:.4f}")
 
 
+def _loss_bf16(lit, batch):
+    with torch.autocast(device_type="cuda", dtype=torch.bfloat16, enabled=torch.cuda.is_available()):
+        return _loss(lit, batch)
+
+
 def _loss(lit, batch):
     out = lit._step(batch)
     return out[0] if isinstance(out, tuple) else out
@@ -171,7 +176,7 @@ def cmd_throughput(args) -> None:
     print("running warmup...")
     optimizer = torch.optim.AdamW(lit.parameters(), lr=1e-4)
     for batch in batches[:args.warmup]:
-        loss = _loss(lit, _to_device(batch))
+        loss = _loss_bf16(lit, _to_device(batch))
         loss.backward()
         optimizer.step()
         optimizer.zero_grad()
@@ -179,7 +184,7 @@ def cmd_throughput(args) -> None:
 
     t0 = time.time()
     for batch in batches[args.warmup:]:
-        loss = _loss(lit, _to_device(batch))
+        loss = _loss_bf16(lit, _to_device(batch))
         loss.backward()
         optimizer.step()
         optimizer.zero_grad()
